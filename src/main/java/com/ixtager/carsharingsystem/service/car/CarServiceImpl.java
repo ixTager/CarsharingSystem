@@ -10,11 +10,13 @@ import com.ixtager.carsharingsystem.service.task.TaskService;
 import com.ixtager.carsharingsystem.util.TaskUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Log4j2
 @Service
 @RequiredArgsConstructor
 public class CarServiceImpl implements CarService {
@@ -46,7 +48,8 @@ public class CarServiceImpl implements CarService {
 
     @Override
     @Transactional
-    public Car createCar(Car car) {
+    public Car addCar(Car car) {
+        log.info("Add new car with new VIN: {}", car.getVIN());
         return carRepository.save(car);
     }
 
@@ -57,16 +60,15 @@ public class CarServiceImpl implements CarService {
                 .orElse(null);
         if (foundedCar == null) return null;
 
-        foundedCar.setVIN(telemetryUpdateRequest.getVin());
         foundedCar.setMileage(telemetryUpdateRequest.getCurrentMileage());
         foundedCar.setFuelLevel(telemetryUpdateRequest.getFuelLevel());
         foundedCar.setLastLatitude(telemetryUpdateRequest.getLatitude());
         foundedCar.setLastLongitude(telemetryUpdateRequest.getLongitude());
 
-        if (telemetryUpdateRequest.getCurrentMileage() > MAX_MILEAGE) {
+        if (foundedCar.getMileage() > MAX_MILEAGE) {
             Task newTask;
             foundedCar.setStatus(CarStatus.MAINTENANCE);
-            if (telemetryUpdateRequest.getFuelLevel() < MIN_FUEL_LEVEL_PRECENT) {
+            if (foundedCar.getFuelLevel() < MIN_FUEL_LEVEL_PRECENT) {
                 newTask = taskUtil.createTask(
                         "Плановое ТО: превышен лимит пробега", TaskPriority.HIGH, foundedCar);
             }
@@ -75,14 +77,18 @@ public class CarServiceImpl implements CarService {
                         TaskPriority.MEDIUM, foundedCar);
             }
             taskService.saveTask(newTask);
+            log.info("Car win VIN: {}, change status. Current Status - {}",
+                    foundedCar.getVIN(), foundedCar.getStatus());
         }
 
+        log.info("Car with VIN: {} was updated",  foundedCar.getVIN());
         return carRepository.save(foundedCar);
     }
 
     @Override
     @Transactional
-    public void deleteCar(Long id) {
-        carRepository.deleteById(id);
+    public void deleteCar(String vin) {
+        carRepository.deleteCarByVIN(vin);
+        log.info("Car with VIN: {} was deleted", vin);
     }
 }

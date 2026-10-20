@@ -11,4 +11,6 @@ public interface CarRepository extends JpaRepository<Car, Long> {
     List<Car> findAllByStatus(CarStatus status);
     List<Car> findAllByModel(String model);
     Optional<Car> findCarByVIN(String vin);
+
+    void deleteCarByVIN(String vin);
 }

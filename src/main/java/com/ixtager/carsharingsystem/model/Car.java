@@ -2,6 +2,7 @@ package com.ixtager.carsharingsystem.model;
 
 import com.ixtager.carsharingsystem.enumerating.CarStatus;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -50,6 +51,8 @@ public class Car {
     private Long mileage = 0L;
 
     @NotNull
+    @Min(0L)
+    @Max(100L)
     @Column(name = "fuel_level", nullable = false)
     private Long fuelLevel;
 

@@ -11,9 +11,9 @@ public interface CarService {
     List<Car> getCatsByModel(String model);
     Car getCarById(Long id);
 
-    Car createCar(Car car);
+    Car addCar(Car car);
 
     Car updateCarByUpdateRequest(TelemetryUpdateRequest telemetryUpdateRequest);
 
-    void deleteCar(Long id);
+    void deleteCar(String vin);
 }
