@@ -25,6 +25,9 @@ public class User {
     @Column(name = "email")
     private String email;
 
+    @Column(name = "password")
+    private String password;
+
     @OneToMany(mappedBy = "creatorLog")
     @Builder.Default
     private List<MaintenanceLog> maintenanceLogs = new ArrayList<>();
