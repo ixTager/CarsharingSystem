@@ -14,6 +14,7 @@ public interface CarService {
     Car addCar(Car car);
 
     Car updateCarByUpdateRequest(TelemetryUpdateRequest telemetryUpdateRequest);
+    Car updateCar(String vin, Car car);
 
     void deleteCar(String vin);
 }

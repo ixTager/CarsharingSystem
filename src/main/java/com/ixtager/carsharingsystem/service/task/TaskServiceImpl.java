@@ -3,6 +3,7 @@ package com.ixtager.carsharingsystem.service.task;
 import com.ixtager.carsharingsystem.enumerating.TaskStatus;
 import com.ixtager.carsharingsystem.jpa.TaskRepository;
 import com.ixtager.carsharingsystem.model.Task;
+import com.ixtager.carsharingsystem.request.UpdateTaskStatus;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -35,10 +36,14 @@ public class TaskServiceImpl implements  TaskService {
 
     @Override
     @Transactional
-    public Task updateTaskStatus(TaskStatus taskStatus, Task task) {
-        task.setStatus(taskStatus);
-        log.info("Update Task Status with id: {}. Current Status - {}", task.getId(),  taskStatus);
-        return taskRepository.save(task);
+    public Task updateTaskStatusByRequest(UpdateTaskStatus updateTaskStatus) {
+        Task foundedTask = taskRepository.findTaskByCar_VIN(updateTaskStatus.getVin())
+                        .orElse(null);
+        if (foundedTask == null) return null;
+        foundedTask.setStatus(updateTaskStatus.getStatus());
+        log.info("Update Task Status with id: {}. Current Status - {}",
+                foundedTask.getId(),  updateTaskStatus.getStatus());
+        return taskRepository.save(foundedTask);
     }
 
     @Override

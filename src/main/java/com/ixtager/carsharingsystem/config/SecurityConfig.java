@@ -28,7 +28,9 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorizeHttpRequests  ->
                         authorizeHttpRequests
-                                .anyRequest().permitAll()
+                                .requestMatchers(
+                                        "/api/v1/cars", "/api/v1/cars/**").hasRole("DISPATCHER")
+                                .anyRequest().authenticated()
                 )
                 .build();
     }

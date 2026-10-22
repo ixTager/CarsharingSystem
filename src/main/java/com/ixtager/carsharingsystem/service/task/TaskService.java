@@ -2,6 +2,7 @@ package com.ixtager.carsharingsystem.service.task;
 
 import com.ixtager.carsharingsystem.enumerating.TaskStatus;
 import com.ixtager.carsharingsystem.model.Task;
+import com.ixtager.carsharingsystem.request.UpdateTaskStatus;
 
 import java.util.List;
 
@@ -12,7 +13,7 @@ public interface TaskService {
     Task saveTask(Task task);
 
     Task updateTask(String vin, Task task);
-    Task updateTaskStatus(TaskStatus taskStatus, Task task);
+    Task updateTaskStatusByRequest(UpdateTaskStatus updateTaskStatus);
 
     void deleteTask(Long id);
 }

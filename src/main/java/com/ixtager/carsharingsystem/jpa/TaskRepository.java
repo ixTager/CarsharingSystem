@@ -10,6 +10,7 @@ import java.util.Optional;
 
 @Repository
 public interface TaskRepository extends JpaRepository<Task,Long> {
+    Optional<Task> findTaskById(Long id);
     Optional<Task> findTaskByCar_VIN(String vin);
     List<Task> findAllByCar_VIN(String vin);
     List<Task> findAllByStatus(TaskStatus status);

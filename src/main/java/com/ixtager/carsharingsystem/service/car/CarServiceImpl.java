@@ -55,7 +55,7 @@ public class CarServiceImpl implements CarService {
 
     @Override
     @Transactional
-    public Car updateCarByUpdateRequest(TelemetryUpdateRequest  telemetryUpdateRequest) {
+    public Car updateCarByUpdateRequest(TelemetryUpdateRequest telemetryUpdateRequest) {
         Car foundedCar = carRepository.findCarByVIN(telemetryUpdateRequest.getVin())
                 .orElse(null);
         if (foundedCar == null) return null;
@@ -82,6 +82,23 @@ public class CarServiceImpl implements CarService {
         }
 
         log.info("Car with VIN: {} was updated",  foundedCar.getVIN());
+        return carRepository.save(foundedCar);
+    }
+
+    @Override
+    @Transactional
+    public Car updateCar(String vin, Car car) {
+        Car foundedCar =  carRepository.findCarByVIN(car.getVIN())
+                .orElse(null);
+        if (foundedCar == null) return null;
+
+        foundedCar.setVIN(car.getVIN());
+        foundedCar.setModel(car.getModel());
+        foundedCar.setStatus(car.getStatus());
+        foundedCar.setLicensePlateNumber(foundedCar.getLicensePlateNumber());
+        foundedCar.setTasks(car.getTasks());
+        foundedCar.setLastLatitude(car.getLastLatitude());
+
         return carRepository.save(foundedCar);
     }
 
