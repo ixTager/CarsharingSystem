@@ -63,8 +63,8 @@ public class CarServiceImpl implements CarService {
 
     @Override
     @Transactional
-    public Car updateCarByUpdateTelemetryRequest(TelemetryUpdateRequest telemetryUpdateRequest) {
-        Car foundedCar = carRepository.findCarByVIN(telemetryUpdateRequest.getVin())
+    public Car updateCarByUpdateTelemetryRequest(String vin, TelemetryUpdateRequest telemetryUpdateRequest) {
+        Car foundedCar = carRepository.findCarByVIN(vin)
                 .orElse(null);
         if (foundedCar == null) return null;
 

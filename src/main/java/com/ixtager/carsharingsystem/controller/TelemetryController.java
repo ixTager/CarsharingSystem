@@ -5,10 +5,7 @@ import com.ixtager.carsharingsystem.request.TelemetryUpdateRequest;
 import com.ixtager.carsharingsystem.service.car.CarServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -16,9 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class TelemetryController {
     private final CarServiceImpl carService;
 
-    @GetMapping
-    public ResponseEntity<Car> updateTelemetry(@RequestBody TelemetryUpdateRequest telemetryUpdateRequest) {
-        Car car = carService.updateCarByUpdateTelemetryRequest(telemetryUpdateRequest);
+    @PutMapping("/update_telemetry")
+    public ResponseEntity<Car> updateTelemetry(String vin, @RequestBody TelemetryUpdateRequest telemetryUpdateRequest) {
+        Car car = carService.updateCarByUpdateTelemetryRequest(vin, telemetryUpdateRequest);
         if (car == null) return ResponseEntity.notFound().build();
         return ResponseEntity.ok().build();
     }

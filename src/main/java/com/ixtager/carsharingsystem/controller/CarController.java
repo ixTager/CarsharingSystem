@@ -45,7 +45,7 @@ public class CarController {
         return ResponseEntity.ok(updatedCar);
     }
 
-    @PutMapping("/{vin}/change_status/{status}")
+    @PutMapping("/change_status/{vin}/{status}")
     public ResponseEntity<Car> changeStatus(@PathVariable String vin, CarStatus status) {
         Car updatedCar = carService.updateCarStatus(vin ,status);
         if (updatedCar == null) return ResponseEntity.notFound().build();

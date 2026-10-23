@@ -29,7 +29,14 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorizeHttpRequests  ->
                         authorizeHttpRequests
                                 .requestMatchers(
-                                        "/api/v1/cars", "/api/v1/cars/**").hasRole("DISPATCHER")
+                                        "/api/v1/cars", "/api/v1/cars/**",
+                                        "/api/v1/logs", "/api/v1/logs/**",
+                                        "/api/v1/tasks/", "/api/v1/tasks/**",
+                                        "/api/v1/telemetry", "/api/v1/telemetry/**").hasRole("DISPATCHER")
+                                .requestMatchers(
+                                        "/api/v1/logs", "/api/v1/logs/**",
+                                        "/api/v1/tasks/change_status", "/api/v1/cars/change_status/**")
+                                .hasRole("MECHANIC")
                                 .anyRequest().authenticated()
                 )
                 .build();
