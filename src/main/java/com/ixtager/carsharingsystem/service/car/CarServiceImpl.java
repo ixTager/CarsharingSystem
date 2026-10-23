@@ -5,8 +5,11 @@ import com.ixtager.carsharingsystem.enumerating.TaskPriority;
 import com.ixtager.carsharingsystem.jpa.CarRepository;
 import com.ixtager.carsharingsystem.model.Car;
 import com.ixtager.carsharingsystem.model.Task;
+import com.ixtager.carsharingsystem.request.CreateCarRequest;
 import com.ixtager.carsharingsystem.request.TelemetryUpdateRequest;
+import com.ixtager.carsharingsystem.request.UpdateCarRequest;
 import com.ixtager.carsharingsystem.service.task.TaskService;
+import com.ixtager.carsharingsystem.util.CarUtil;
 import com.ixtager.carsharingsystem.util.TaskUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -27,8 +30,12 @@ public class CarServiceImpl implements CarService {
     private int MIN_FUEL_LEVEL_PRECENT;
 
     private final TaskUtil taskUtil;
+    private final CarUtil carUtil;
     private final CarRepository carRepository;
     private final TaskService taskService;
+
+    @Override
+    public List<Car> getAllCars() { return carRepository.findAll(); }
 
     @Override
     public List<Car> getCarsByStatus(CarStatus status) {
@@ -48,14 +55,15 @@ public class CarServiceImpl implements CarService {
 
     @Override
     @Transactional
-    public Car addCar(Car car) {
-        log.info("Add new car with new VIN: {}", car.getVIN());
-        return carRepository.save(car);
+    public Car addNewCar(CreateCarRequest createCarRequest) {
+        Car newCar = carUtil.createCarEntityByCarRequest(createCarRequest);
+        log.info("Add new car with new VIN: {}", newCar.getVIN());
+        return newCar;
     }
 
     @Override
     @Transactional
-    public Car updateCarByUpdateRequest(TelemetryUpdateRequest telemetryUpdateRequest) {
+    public Car updateCarByUpdateTelemetryRequest(TelemetryUpdateRequest telemetryUpdateRequest) {
         Car foundedCar = carRepository.findCarByVIN(telemetryUpdateRequest.getVin())
                 .orElse(null);
         if (foundedCar == null) return null;
@@ -81,24 +89,33 @@ public class CarServiceImpl implements CarService {
                     foundedCar.getVIN(), foundedCar.getStatus());
         }
 
-        log.info("Car with VIN: {} was updated",  foundedCar.getVIN());
+        log.info("Car telemetry with VIN: {} was updated", foundedCar.getVIN());
         return carRepository.save(foundedCar);
     }
 
     @Override
     @Transactional
-    public Car updateCar(String vin, Car car) {
-        Car foundedCar =  carRepository.findCarByVIN(car.getVIN())
-                .orElse(null);
+    public Car updateCarByUpdateCarRequest(String vin, UpdateCarRequest updateCarRequest) {
+        Car foundedCar = carRepository.findCarByVIN(vin).orElse(null);
         if (foundedCar == null) return null;
 
-        foundedCar.setVIN(car.getVIN());
-        foundedCar.setModel(car.getModel());
-        foundedCar.setStatus(car.getStatus());
+        foundedCar.setVIN(updateCarRequest.getVin());
+        foundedCar.setModel(updateCarRequest.getModel());
+        foundedCar.setStatus(updateCarRequest.getStatus());
         foundedCar.setLicensePlateNumber(foundedCar.getLicensePlateNumber());
-        foundedCar.setTasks(car.getTasks());
-        foundedCar.setLastLatitude(car.getLastLatitude());
 
+        log.info("Car information with VIN: {} was updated",  foundedCar.getVIN());
+
+        return carRepository.save(foundedCar);
+    }
+
+    @Override
+    public Car updateCarStatus(String vin, CarStatus status) {
+        Car foundedCar = carRepository.findCarByVIN(vin).orElse(null);
+        if (foundedCar == null) return null;
+
+        foundedCar.setStatus(status);
+        log.info("CarStatus with VIN: {} was updated to {}", foundedCar.getVIN(), foundedCar.getStatus());
         return carRepository.save(foundedCar);
     }
 

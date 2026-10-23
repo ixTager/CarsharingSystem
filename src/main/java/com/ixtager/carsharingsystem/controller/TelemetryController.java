@@ -18,7 +18,7 @@ public class TelemetryController {
 
     @GetMapping
     public ResponseEntity<Car> updateTelemetry(@RequestBody TelemetryUpdateRequest telemetryUpdateRequest) {
-        Car car = carService.updateCarByUpdateRequest(telemetryUpdateRequest);
+        Car car = carService.updateCarByUpdateTelemetryRequest(telemetryUpdateRequest);
         if (car == null) return ResponseEntity.notFound().build();
         return ResponseEntity.ok().build();
     }
