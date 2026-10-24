@@ -7,7 +7,7 @@ import com.ixtager.carsharingsystem.request.UpdateCarRequest;
 import com.ixtager.carsharingsystem.service.car.CarService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,6 +19,7 @@ public class CarController {
     private final CarService carService;
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('DISPATCHER','MECHANIC')")
     public ResponseEntity<List<Car>> getAllCars(
             @RequestParam(required = false) String byStatus) {
         //Todo implementation findCars by filters
@@ -26,6 +27,7 @@ public class CarController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('DISPATCHER','MECHANIC')")
     public ResponseEntity<Car> getCarById(@PathVariable Long id) {
         Car car = carService.getCarById(id);
         if (car == null) return ResponseEntity.notFound().build();
@@ -33,12 +35,14 @@ public class CarController {
     }
 
     @PostMapping("/add_car")
+    @PreAuthorize("hasAuthority('ROLE_DISPATCHER')")
     public ResponseEntity<Car> addCar(@RequestBody CreateCarRequest createCarRequest) {
         Car newCar = carService.addNewCar(createCarRequest);
         return ResponseEntity.ok(newCar);
     }
 
     @PutMapping("/{vin}")
+    @PreAuthorize("hasAuthority('ROLE_DISPATCHER')")
     public ResponseEntity<Car> updateCar(String vin, @RequestBody UpdateCarRequest updateCarRequest) {
         Car updatedCar = carService.updateCarByUpdateCarRequest(vin, updateCarRequest);
         if (updatedCar == null) return ResponseEntity.notFound().build();
