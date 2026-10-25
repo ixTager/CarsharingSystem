@@ -2,7 +2,6 @@ package com.ixtager.carsharingsystem.controller;
 
 import com.ixtager.carsharingsystem.model.Car;
 import com.ixtager.carsharingsystem.request.TelemetryUpdateRequest;
-import com.ixtager.carsharingsystem.service.car.CarServiceImpl;
 import com.ixtager.carsharingsystem.service.telemetry.TelemetryServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

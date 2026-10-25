@@ -3,7 +3,6 @@ package com.ixtager.carsharingsystem.service.car;
 import com.ixtager.carsharingsystem.enumerating.CarStatus;
 import com.ixtager.carsharingsystem.model.Car;
 import com.ixtager.carsharingsystem.request.CreateCarRequest;
-import com.ixtager.carsharingsystem.request.TelemetryUpdateRequest;
 import com.ixtager.carsharingsystem.request.UpdateCarRequest;
 
 import java.util.List;

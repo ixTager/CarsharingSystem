@@ -1,20 +1,14 @@
 package com.ixtager.carsharingsystem.service.car;
 
 import com.ixtager.carsharingsystem.enumerating.CarStatus;
-import com.ixtager.carsharingsystem.enumerating.TaskPriority;
 import com.ixtager.carsharingsystem.jpa.CarRepository;
 import com.ixtager.carsharingsystem.model.Car;
-import com.ixtager.carsharingsystem.model.Task;
 import com.ixtager.carsharingsystem.request.CreateCarRequest;
-import com.ixtager.carsharingsystem.request.TelemetryUpdateRequest;
 import com.ixtager.carsharingsystem.request.UpdateCarRequest;
-import com.ixtager.carsharingsystem.service.task.TaskService;
 import com.ixtager.carsharingsystem.util.CarUtil;
-import com.ixtager.carsharingsystem.util.TaskUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
