@@ -23,16 +23,8 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class CarServiceImpl implements CarService {
-    @Value("${car.max.mileage}")
-    private int MAX_MILEAGE;
-
-    @Value("${car.min.fuel-level-percent}")
-    private int MIN_FUEL_LEVEL_PRECENT;
-
-    private final TaskUtil taskUtil;
     private final CarUtil carUtil;
     private final CarRepository carRepository;
-    private final TaskService taskService;
 
     @Override
     public List<Car> getAllCars() { return carRepository.findAll(); }
@@ -61,37 +53,7 @@ public class CarServiceImpl implements CarService {
         return newCar;
     }
 
-    @Override
-    @Transactional
-    public Car updateCarByUpdateTelemetryRequest(String vin, TelemetryUpdateRequest telemetryUpdateRequest) {
-        Car foundedCar = carRepository.findCarByVIN(vin)
-                .orElse(null);
-        if (foundedCar == null) return null;
 
-        foundedCar.setMileage(telemetryUpdateRequest.getCurrentMileage());
-        foundedCar.setFuelLevel(telemetryUpdateRequest.getFuelLevel());
-        foundedCar.setLastLatitude(telemetryUpdateRequest.getLatitude());
-        foundedCar.setLastLongitude(telemetryUpdateRequest.getLongitude());
-
-        if (foundedCar.getMileage() > MAX_MILEAGE) {
-            Task newTask;
-            foundedCar.setStatus(CarStatus.MAINTENANCE);
-            if (foundedCar.getFuelLevel() < MIN_FUEL_LEVEL_PRECENT) {
-                newTask = taskUtil.createTask(
-                        "Плановое ТО: превышен лимит пробега", TaskPriority.HIGH, foundedCar);
-            }
-            else {
-                newTask = taskUtil.createTask("Плановое ТО: превышен лимит пробега",
-                        TaskPriority.MEDIUM, foundedCar);
-            }
-            taskService.saveTask(newTask);
-            log.info("Car win VIN: {}, change status. Current Status - {}",
-                    foundedCar.getVIN(), foundedCar.getStatus());
-        }
-
-        log.info("Car telemetry with VIN: {} was updated", foundedCar.getVIN());
-        return carRepository.save(foundedCar);
-    }
 
     @Override
     @Transactional

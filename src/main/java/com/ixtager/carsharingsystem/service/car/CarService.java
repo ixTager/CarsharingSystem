@@ -16,7 +16,6 @@ public interface CarService {
 
     Car addNewCar(CreateCarRequest createCarRequest);
 
-    Car updateCarByUpdateTelemetryRequest(String vin, TelemetryUpdateRequest telemetryUpdateRequest);
     Car updateCarByUpdateCarRequest(String vin, UpdateCarRequest updateCarRequest);
     Car updateCarStatus(String vin, CarStatus status);
 
