@@ -66,6 +66,7 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
+    @Transactional
     public Car updateCarStatus(String vin, CarStatus status) {
         Car foundedCar = carRepository.findCarByVIN(vin).orElse(null);
         if (foundedCar == null) return null;

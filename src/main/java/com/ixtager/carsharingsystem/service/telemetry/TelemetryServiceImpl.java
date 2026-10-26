@@ -19,10 +19,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class TelemetryServiceImpl implements  TelemetryService {
     @Value("${car.max.mileage}")
-    private Integer MAX_MILEAGE;
-
-    @Value("${car.min.fuel-level-percent}")
-    private Integer MIN_FUEL_LEVEL_PRECENT;
+    private Long MAX_MILEAGE;
 
     private final TaskService taskService;
     private final TaskUtil  taskUtil;
@@ -41,19 +38,10 @@ public class TelemetryServiceImpl implements  TelemetryService {
         foundedCar.setLastLongitude(telemetryUpdateRequest.getLongitude());
 
         if (foundedCar.getMileage() > MAX_MILEAGE) {
-            Task newTask;
             foundedCar.setStatus(CarStatus.MAINTENANCE);
-            if (foundedCar.getFuelLevel() < MIN_FUEL_LEVEL_PRECENT) {
-                newTask = taskUtil.createTask(
-                        "Плановое ТО: превышен лимит пробега", TaskPriority.HIGH, foundedCar);
-            }
-            else {
-                newTask = taskUtil.createTask("Плановое ТО: превышен лимит пробега",
-                        TaskPriority.MEDIUM, foundedCar);
-            }
+            Task newTask = taskUtil.createTask(
+                    "Превышание планового TO", foundedCar, foundedCar.getFuelLevel());
             taskService.saveTask(newTask);
-            log.info("Car win VIN: {}, change status. Current Status - {}",
-                    foundedCar.getVIN(), foundedCar.getStatus());
         }
 
         log.info("Car telemetry with VIN: {} was updated", foundedCar.getVIN());
