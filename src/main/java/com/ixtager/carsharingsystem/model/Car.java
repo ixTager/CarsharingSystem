@@ -39,7 +39,6 @@ public class Car {
     private String model;
 
     @NotNull
-    @NotNull
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
     private CarStatus status;

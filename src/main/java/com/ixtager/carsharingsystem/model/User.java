@@ -2,6 +2,8 @@ package com.ixtager.carsharingsystem.model;
 
 import com.ixtager.carsharingsystem.enumerating.UserRole;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -23,19 +25,27 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name")
+    @NotNull
+    @Size(min = 5, max = 50)
+    @Column(name = "name", nullable = false)
     private String username;
 
+    @NotNull
+    @Size(min = 5, max = 255)
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
+    @NotNull
+    @Size(max = 255)
     @Column(name = "password", nullable = false)
     private String password;
 
+    @NotNull
     @OneToMany(mappedBy = "creatorLog")
     @Builder.Default
     private List<MaintenanceLog> maintenanceLogs = new ArrayList<>();
 
+    @NotNull
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
     private UserRole role;

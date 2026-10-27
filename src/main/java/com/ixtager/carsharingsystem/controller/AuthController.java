@@ -4,6 +4,7 @@ import com.ixtager.carsharingsystem.reponse.JwtAuthenticationResponse;
 import com.ixtager.carsharingsystem.request.SignInRequest;
 import com.ixtager.carsharingsystem.request.SignUpRequest;
 import com.ixtager.carsharingsystem.service.auth.AuthenticationService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,12 +18,12 @@ public class AuthController {
     private final AuthenticationService authenticationService;
 
     @PostMapping("/sign-up")
-    public JwtAuthenticationResponse signUp(@RequestBody SignUpRequest signUpRequest) {
+    public JwtAuthenticationResponse signUp(@Valid @RequestBody SignUpRequest signUpRequest) {
         return authenticationService.signUp(signUpRequest);
     }
 
     @PostMapping("/sign-in")
-    public JwtAuthenticationResponse signIn(@RequestBody SignInRequest signInRequest) {
+    public JwtAuthenticationResponse signIn(@Valid @RequestBody SignInRequest signInRequest) {
         return authenticationService.signIn(signInRequest);
     }
 }

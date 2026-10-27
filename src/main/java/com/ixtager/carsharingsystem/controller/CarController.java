@@ -5,6 +5,7 @@ import com.ixtager.carsharingsystem.model.Car;
 import com.ixtager.carsharingsystem.request.CreateCarRequest;
 import com.ixtager.carsharingsystem.request.UpdateCarRequest;
 import com.ixtager.carsharingsystem.service.car.CarService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -36,21 +37,21 @@ public class CarController {
 
     @PostMapping("/add_car")
     @PreAuthorize("hasAuthority('ROLE_DISPATCHER')")
-    public ResponseEntity<Car> addCar(@RequestBody CreateCarRequest createCarRequest) {
+    public ResponseEntity<Car> addCar(@Valid @RequestBody CreateCarRequest createCarRequest) {
         Car newCar = carService.addNewCar(createCarRequest);
         return ResponseEntity.ok(newCar);
     }
 
     @PutMapping("/{vin}")
     @PreAuthorize("hasAuthority('ROLE_DISPATCHER')")
-    public ResponseEntity<Car> updateCar(String vin, @RequestBody UpdateCarRequest updateCarRequest) {
+    public ResponseEntity<Car> updateCar(String vin, @Valid @RequestBody UpdateCarRequest updateCarRequest) {
         Car updatedCar = carService.updateCarByUpdateCarRequest(vin, updateCarRequest);
         if (updatedCar == null) return ResponseEntity.notFound().build();
         return ResponseEntity.ok(updatedCar);
     }
 
     @PutMapping("/change_status/{vin}/{status}")
-    public ResponseEntity<Car> changeStatus(@PathVariable String vin, CarStatus status) {
+    public ResponseEntity<Car> changeStatus(@PathVariable String vin, @PathVariable CarStatus status) {
         Car updatedCar = carService.updateCarStatus(vin ,status);
         if (updatedCar == null) return ResponseEntity.notFound().build();
 

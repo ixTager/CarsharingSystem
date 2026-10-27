@@ -4,6 +4,7 @@ import com.ixtager.carsharingsystem.enumerating.TaskStatus;
 import com.ixtager.carsharingsystem.model.Task;
 import com.ixtager.carsharingsystem.request.UpdateTaskStatus;
 import com.ixtager.carsharingsystem.service.task.TaskService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -26,7 +27,7 @@ public class TaskController {
 
     @PostMapping("/change_status")
     @PreAuthorize("hasAuthority('ROLE_MECHANIC')")
-    public ResponseEntity<Task> changeTaskStatus(@RequestBody UpdateTaskStatus updateTaskStatus) {
+    public ResponseEntity<Task> changeTaskStatus(@Valid @RequestBody UpdateTaskStatus updateTaskStatus) {
         Task newTask = taskService.updateTaskStatusByRequest(updateTaskStatus);
         if (newTask == null) return ResponseEntity.notFound().build();
         return ResponseEntity.ok(newTask);
