@@ -2,7 +2,6 @@ package com.ixtager.carsharingsystem.request;
 
 import com.ixtager.carsharingsystem.enumerating.TaskStatus;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
